@@ -22,12 +22,13 @@ app.get('/todoItems', (req, res)=>{
 			console.error(err.message);
 		}
 		else{
-			console.log(row);
+			// console.log(row);
 			res.send(row);
 		}
 	})
 })
 
+//add new a item to the list
 app.post('/addItem', (req,res)=>{
 	db.all("INSERT into toDoList(todoItem, completed) values($todoItem, $completed)",
 	{
@@ -37,7 +38,7 @@ app.post('/addItem', (req,res)=>{
 	(err,row)=>
 	{
 		if(err){
-			console.log(err.message);
+			// console.log(err.message);
 			res.send({});
 		}
 		else{
@@ -77,7 +78,7 @@ app.get('/search/:searchKey',(req,res) => {
       console.error(err.message);
     } else{
       // console.log("SEARCH: ");
-      console.log(row);
+      // console.log(row);
       res.send(row);
     }
   });
