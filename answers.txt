@@ -11,12 +11,19 @@ function removeDuplicates(arr) {
 
 2. Why use server side filtering instead of client side filtering?
 
-Server side filtering allows you to have more control especially with security issues and scalability. It will not slow down your application since it minimizes the amount of data being sent over the network. Server side filtering also allows you to make changes on your server without changing the UI or pushing for a new version of your app.
+Server side filtering allows you to have more control especially with security issues and scalability.
+It will not slow down your application since it minimizes the amount of 
+data being sent over the network. 
+Server side filtering also allows you to make changes on your server without 
+changing the UI or pushing for a new version of your app.
 
 
 3. What is jQuery and why would you choose to use it, or choose not to use it?
 
-jQuery is javascript library. I personally choose to use jQuery to make it simpler/easier to use javascript for web applications/websites so i can focus more on the more complicated tasks. For example, it simplifies the ajax call DOM manipulations/traversals, and event handling. jQuery also works across the same all “major” browsers. 
+jQuery is javascript library. I personally choose to use jQuery to make it simpler/easier to use javascript for web applications/websites 
+so I can focus more on the more complicated tasks. 
+For example, it simplifies the ajax call DOM manipulations/traversals, 
+and event handling. jQuery also works across the same all “major” browsers. 
 
 4. What's wrong with this snippet of code?
 	$name = $_POST['name'];
