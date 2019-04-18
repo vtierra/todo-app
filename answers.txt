@@ -23,7 +23,7 @@ changing the UI or pushing for a new version of your app.
 jQuery is javascript library. I personally choose to use jQuery to make it simpler/easier to use javascript for web applications/websites 
 so I can focus more on the more complicated tasks. 
 For example, it simplifies the ajax call DOM manipulations/traversals, 
-and event handling. jQuery also works across the same all “major” browsers. 
+and event handling. jQuery also works the same for all “major” browsers. 
 
 4. What's wrong with this snippet of code?
 	$name = $_POST['name'];
