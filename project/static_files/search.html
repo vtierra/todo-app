@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Search</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="search.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+<body>
+	<!-- navbar for the application -->
+	<nav class="navbar navbar-expand-lg" id="nav">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="todo.html">TO DO</a>
+		</div>
+			<div class="form-inline my-2 my-lg-0" id="searchbox">
+				<input class="form-control mr-sm-2" type="search" id="searchId" placeholder="Search" aria-label="Search"/>
+				<button class="btn btn-primary my-2 my-sm-0" id="searchButton">Search</button>
+			</div>
+		</nav>
+		<!-- Search Results Title -->
+		<h2 id="resultsTitle">RESULTS FOR<span id="searchFor"></span></h2>
+		<div class="container error hidden"></div>
+		<!--- search results if any --->
+		<div class="container" id="searchResults"></div>
+		<div id="todoTemplate" class="container hidden">
+			<div>
+			<span id="todoItem">
+			</span>
+		</div>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script>
+			$(document).ready( ()=>{
+
+				/* Get search key from url and decode to handle spaces */	
+				const searchKey = decodeURIComponent(window.location.search.substr(1));
+				const key = decodeURIComponent(window.location.search.substr(9));
+				/* Get search results on page load */
+				$('#searchFor').html(' "' + key + '"');
+				$.ajax({
+					url: searchKey, 
+					type: 'GET',
+					datatype: 'JSON',
+					success: (data) =>{
+						if(data.length > 0){
+							$('#searchResults').empty();
+							$(data).each( (e)=>{
+								let clone = $('#todoTemplate').clone().removeClass('hidden');
+								clone.find('div').attr('value', data[e].todoItem).removeClass('hidden');
+								if(data[e].completed != 0){
+									clone.find('div').attr('completed', data[e].completed);
+									clone.find('div').addClass('checkedItem');
+								}else{
+									clone.find('div').attr('completed', data[e].completed);
+								}
+								clone.find('div').attr('key_id', data[e].todo_id);
+						clone.find('#todoItem').html(data[e].todoItem);
+						$('#searchResults').append(clone);
+
+					})
+
+						}
+						else{
+							$('.error').html("Oops did not find anything").removeClass('hidden');
+						}
+					}
+				});
+
+				$('#searchButton').click(()=>{
+					console.log($('#searchId').val());
+					if($('#searchId').val() != ''){
+						window.location = 'search.html?/search/' + $('#searchId').val();
+					}
+				});
+
+			})
+		</script>
+	</body>
+	</html>

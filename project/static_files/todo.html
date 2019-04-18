@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>TO-DO</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="todo.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+<body>
+	<!-- navbar for the application -->
+	<nav class="navbar navbar-expand-lg" id="nav">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="todo.html">TO DO</a>
+		</div>
+			<div class="form-inline my-2 my-lg-0" id="searchbox">
+				<input class="form-control mr-sm-2" type="search" id="searchId" placeholder="Search" aria-label="Search"/>
+				<button class="btn btn-primary my-2 my-sm-0" id="searchButton">Search</button>
+			</div>
+		</nav>
+		<div id="error"></div>
+		<div class="container" id="status">
+			<input type="text" placeholder="add item" id="newItem">
+			<button type="button" class="btn btn-primary" id="addItem">+</button>
+		</div>
+		<div class="container" id="todoList">
+		</div>
+
+		<div id="todoTemplate" class="container hidden">
+			<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">&nbsp;
+			<label class="form-check-label" for="defaultCheck1" id="todoItem">
+			</label>
+			<div class="hidden" id="updatedItems"></div>
+		</div>
+		<div class="container" id="deleteItem">
+			<button type="button" class="btn btn-primary" id="deleteButton">Delete</button>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script>
+			$(document).ready( ()=>{
+			//load all to do items from the database
+			let loadList = ()=>{
+				$.ajax({
+					url: '/todoItems',
+					type: 'GET',
+					datatype: 'JSON',
+					success: (data)=>{
+						$('#todoList').empty();
+						$(data).each( (e)=>{
+						// console.log(data)
+						let clone = $('#todoTemplate').clone().removeClass('hidden');
+						clone.find('input').attr('value', data[e].todoItem).removeClass('hidden');
+						clone.find('input').attr('completed', data[e].completed);
+						clone.find('input').attr('key_id', data[e].todo_id);
+						clone.find('#todoItem').html(data[e].todoItem);
+						$('#todoList').append(clone);
+
+				
+						clone.on('click', '#defaultCheck1', ()=>{
+
+
+							let checkTarget = $(this.event.target);
+							if(!checkTarget.next().hasClass('checkedItem')){
+								checkTarget.next().addClass('checkedItem');
+								checkTarget.attr("checked", "checked");
+								checkTarget.addClass('itemDelete');
+							}
+							else{
+								checkTarget.next().removeClass('checkedItem');
+								checkTarget.removeAttr("checked");
+								checkTarget.removeClass('itemDelete');
+							}
+						})
+					});
+					}
+				});
+			}
+			loadList();
+		//add item to database. 
+		$('#addItem').click( (e)=>{
+			if($('#newItem').val()){
+				$.ajax({
+					url: '/addItem',
+					type: 'POST',
+					data: {
+						todoItem: $('#newItem').val(),
+						completed: 0
+					},
+					success: (data) =>{
+						console.log('added')
+						window.top.location = "todo.html";
+					}
+				})
+			}
+			else{
+				$('#error').html('something went wrong');
+			}
+		})
+
+
+		//delete item off web and update completed to 1. 
+		$('#deleteButton').click( ()=>{
+			$(':checkbox').each( (e)=>{
+				if($(':checkbox')[e].checked){
+					// console.log($(':checkbox')[e].value);
+					let val = $(':checkbox')[e];
+					let keyID =$(val).attr("key_id");
+					let completedVal = $(val).attr("completed");
+					let done  = 1;
+					console.log(keyID);
+					console.log(completedVal);
+					console.log($(val).attr("value"));;
+					$.ajax({
+						url: '/deleteItem',
+						type: 'POST',
+						data:{
+							key_id: keyID,
+							completed: done
+						},
+						success: (data)=>{
+							// console.log('updated');
+							window.top.location = "todo.html";
+						}
+					})
+				}
+			});
+		})
+
+		//search items from the toDoList database
+		$('#searchButton').click(()=>{
+			// console.log($('#searchId').val());
+			//only do a search if they write something
+			if($('#searchId').val() != ''){
+				window.location = 'search.html?/search/' + $('#searchId').val();
+			}
+		});
+
+	});
+</script>
+</body>
+</html>

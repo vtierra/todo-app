@@ -1,0 +1,2 @@
+#ignore all node_modules/ -- use 'npm install' to install on your machine
+node_modules/

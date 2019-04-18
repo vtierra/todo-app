@@ -1,0 +1,29 @@
+1. Write a function to remove duplicate values from an array.  (Assume all values of the array are simple, lowercase strings) 
+
+function removeDuplicates(arr) { 
+  if(!arr){
+    return;
+  }
+  return Array.from(new Set(arr)); 
+}
+// it’ll a return a new array with unique values. 
+
+
+2. Why use server side filtering instead of client side filtering?
+
+Server side filtering allows you to have more control especially with security issues and scalability. It will not slow down your application since it minimizes the amount of data being sent over the network. Server side filtering also allows you to make changes on your server without changing the UI or pushing for a new version of your app.
+
+
+3. What is jQuery and why would you choose to use it, or choose not to use it?
+
+jQuery is javascript library. I personally choose to use jQuery to make it simpler/easier to use javascript for web applications/websites so i can focus more on the more complicated tasks. For example, it simplifies the ajax call DOM manipulations/traversals, and event handling. jQuery also works across the same all “major” browsers. 
+
+4. What's wrong with this snippet of code?
+	$name = $_POST['name'];
+	$query = 'insert into friends (name) values ("' . $name . '")';
+	mysqli_query($connection, $query);
+
+--- 
+This “‘. $name .’” syntax is wrong
+$connection is not defined. 
+
